@@ -1,74 +1,117 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react'
 
-function useScrollReveal() {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true); }, { threshold: 0.1 });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, []);
-  return [ref, visible];
-}
-
-const testimonials = [
-  { name: 'Sarah Chen', role: 'CTO at Vertico', avatar: 'SC', color: '#8b5cf6', quote: "Nexus completely transformed our deployment workflow. What used to take our team hours now happens automatically in under a minute. The DX is unlike anything I've seen." },
-  { name: 'Marcus Johnson', role: 'Lead Engineer at Blaze', avatar: 'MJ', color: '#60a5fa', quote: "We migrated our entire infrastructure to Nexus in a weekend. The documentation is phenomenal and their support team is incredibly responsive. 10/10 would recommend." },
-  { name: 'Priya Sharma', role: 'Founder at Loopify', avatar: 'PS', color: '#34d399', quote: "As a solo founder, Nexus gives me the power of a full DevOps team. I can focus entirely on my product instead of wrestling with infrastructure. It's a game changer." },
-  { name: 'Alex Rivera', role: 'VP Engineering at Crest', avatar: 'AR', color: '#f472b6', quote: "The analytics and monitoring built into Nexus are best-in-class. We caught and resolved a critical issue in production before any users were affected thanks to their alert system." },
-  { name: 'James Park', role: 'Staff Engineer at Ditto', avatar: 'JP', color: '#fbbf24', quote: "Preview deployments per PR is the killer feature for us. Our QA cycle shrunk by 60% and the whole team ships with way more confidence now. Absolutely worth every penny." },
-  { name: 'Lena Fischer', role: 'Engineering Manager at Novu', avatar: 'LF', color: '#fb923c', quote: "Nexus's global edge network brought our app latency down to single-digit milliseconds worldwide. Our users in APAC finally get the same experience as everyone else." },
-];
+const reviews = [
+  {
+    id: 1,
+    name: 'Alex Chen',
+    handle: '@alexc.studio',
+    avatar: 'AC',
+    rating: 5,
+    text: "Devnix Studio completely changed how I think about my wardrobe. The quality is unreal — the fabric, the fit, the way the pieces just work together. I've never received so many compliments.",
+  },
+  {
+    id: 2,
+    name: 'Mia Fontaine',
+    handle: '@mia.font',
+    avatar: 'MF',
+    rating: 5,
+    text: "I bought the Shadow Bomber and I wear it literally everywhere. It's the kind of piece that looks effortless but clearly isn't. Premium in every sense of the word.",
+  },
+  {
+    id: 3,
+    name: 'Jordan Blake',
+    handle: '@j.blake',
+    avatar: 'JB',
+    rating: 5,
+    text: "Finally a brand that understands minimalism. Not cheap and boring, but stripped back and intentional. The cargo trousers are on another level. Fast shipping too.",
+  },
+  {
+    id: 4,
+    name: 'Sofia Ren',
+    handle: '@sofia.ren',
+    avatar: 'SR',
+    rating: 5,
+    text: "The essentials set is worth every penny. Clean, structured, timeless. Devnix is the only brand I actually look forward to new drops from.",
+  },
+]
 
 export default function Testimonials() {
-  const [headerRef, headerVisible] = useScrollReveal();
-  const [gridRef, gridVisible] = useScrollReveal();
+  const [active, setActive] = useState(0)
+  const sectionRef = useRef(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target) }
+      }),
+      { threshold: 0.1 }
+    )
+    sectionRef.current?.querySelectorAll('.reveal')
+      .forEach(el => observer.observe(el))
+    return () => observer.disconnect()
+  }, [])
+
+  // Auto-advance
+  useEffect(() => {
+    const t = setInterval(() => setActive(a => (a + 1) % reviews.length), 4500)
+    return () => clearInterval(t)
+  }, [])
 
   return (
-    <section id="testimonials" style={{ padding: '128px 0', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)', width: 900, height: 400, background: 'radial-gradient(ellipse, rgba(59,130,246,0.05) 0%, transparent 70%)', zIndex: -1 }} />
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 24px' }}>
-        <div ref={headerRef} style={{ textAlign: 'center', marginBottom: 80, opacity: headerVisible ? 1 : 0, transform: headerVisible ? 'none' : 'translateY(30px)', transition: 'all 0.7s ease' }}>
-          <div className="glass" style={{ display: 'inline-flex', padding: '8px 16px', borderRadius: 99, marginBottom: 24 }}>
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase' }}>Testimonials</span>
-          </div>
-          <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(36px, 5vw, 60px)', fontWeight: 900, letterSpacing: '-1.5px', lineHeight: 1.1 }}>
-            Loved by <span className="gradient-text">engineers</span><br />everywhere
-          </h2>
+    <section id="contact" ref={sectionRef} className="bg-[#0a0a0a] py-24 px-6 md:px-12 lg:px-20">
+      <div className="max-w-5xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-16 reveal">
+          <p className="text-white/40 text-xs tracking-[0.4em] uppercase mb-3">— Reviews</p>
+          <h2 className="font-poppins font-bold text-4xl md:text-5xl text-white">What They Say</h2>
         </div>
 
-        <div ref={gridRef} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
-          {testimonials.map((t, i) => (
-            <div key={t.name}
-              style={{
-                opacity: gridVisible ? 1 : 0,
-                transform: gridVisible ? 'none' : 'translateY(40px)',
-                transition: `opacity 0.6s ease ${i * 0.08}s, transform 0.6s ease ${i * 0.08}s`,
-              }}
-            >
-              <div className="glass" style={{ borderRadius: 24, padding: 24, border: '1px solid rgba(255,255,255,0.07)', position: 'relative', overflow: 'hidden', transition: 'all 0.3s', cursor: 'default', height: '100%' }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-5px) scale(1.01)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; }}>
-                <div style={{ position: 'absolute', top: 16, right: 20, fontSize: 36, opacity: 0.08 }}>❝</div>
-                {/* Stars */}
-                <div style={{ display: 'flex', gap: 3, marginBottom: 16 }}>
-                  {[1,2,3,4,5].map((s) => <span key={s} style={{ color: '#facc15', fontSize: 13 }}>★</span>)}
-                </div>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.75, marginBottom: 20, position: 'relative', zIndex: 1 }}>{t.quote}</p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, paddingTop: 16, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                  <div style={{ width: 36, height: 36, borderRadius: '50%', background: t.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: '#fff', flexShrink: 0 }}>
-                    {t.avatar}
+        {/* Slider */}
+        <div className="reveal d2 overflow-hidden">
+          <div
+            className="tslider"
+            style={{ transform: `translateX(-${active * 100}%)` }}
+          >
+            {reviews.map(r => (
+              <div key={r.id} className="min-w-full px-2 md:px-12">
+                <div className="glass-card rounded-2xl p-8 md:p-12 text-center">
+                  {/* Stars */}
+                  <div className="flex justify-center gap-1 mb-6">
+                    {[...Array(r.rating)].map((_, i) => (
+                      <span key={i} className="text-white text-base">★</span>
+                    ))}
                   </div>
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>{t.name}</div>
-                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{t.role}</div>
+                  {/* Quote */}
+                  <p className="text-white/70 text-base md:text-lg leading-relaxed font-light mb-8 max-w-2xl mx-auto">
+                    "{r.text}"
+                  </p>
+                  {/* Author */}
+                  <div className="flex items-center justify-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white text-xs font-bold tracking-wide">
+                      {r.avatar}
+                    </div>
+                    <div className="text-left">
+                      <p className="text-white text-sm font-semibold">{r.name}</p>
+                      <p className="text-white/40 text-xs">{r.handle}</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Dots */}
+        <div className="reveal d3 flex justify-center gap-2 mt-8">
+          {reviews.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setActive(i)}
+              className={`h-1 rounded-full transition-all duration-500 ${i === active ? 'w-8 bg-white' : 'w-2 bg-white/20'}`}
+            />
           ))}
         </div>
       </div>
     </section>
-  );
+  )
 }

@@ -1,29 +1,23 @@
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Features from './components/Features';
-import HowItWorks from './components/HowItWorks';
-import Showcase from './components/Showcase';
-import Testimonials from './components/Testimonials';
-import Pricing from './components/Pricing';
-import CTA from './components/CTA';
-import Footer from './components/Footer';
+import Navbar from './components/Navbar'
+import Hero from './components/Hero'
+import FeaturedCollection from './components/FeaturedCollection'
+import ProductShowcase from './components/ProductShowcase'
+import About from './components/About'
+import Testimonials from './components/Testimonials'
+import CTA from './components/CTA'
+import Footer from './components/Footer'
 
-function App() {
+export default function App() {
   return (
-    <div className="min-h-screen bg-[#080808] text-white">
+    <div className="min-h-screen bg-[#0a0a0a]">
       <Navbar />
-      <main>
-        <Hero />
-        <Features />
-        <HowItWorks />
-        <Showcase />
-        <Testimonials />
-        <Pricing />
-        <CTA />
-      </main>
+      <Hero />
+      <FeaturedCollection />
+      <ProductShowcase />
+      <About />
+      <Testimonials />
+      <CTA />
       <Footer />
     </div>
-  );
+  )
 }
-
-export default App;

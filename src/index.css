@@ -1,3 +1,6 @@
-/* Global styles — Tailwind loaded via CDN in index.html */
+/* Reset & base — index.html handles most global styles via <style> tag */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; }
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+/* Ensure images never overflow */
+img { max-width: 100%; display: block; }

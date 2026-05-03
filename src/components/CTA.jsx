@@ -1,81 +1,90 @@
-import { useEffect, useRef, useState } from 'react';
-
-function useScrollReveal() {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true); }, { threshold: 0.1 });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, []);
-  return [ref, visible];
-}
+import { useEffect, useRef, useState } from 'react'
 
 export default function CTA() {
-  const [ref, visible] = useScrollReveal();
+  const [email, setEmail] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+  const sectionRef = useRef(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target) }
+      }),
+      { threshold: 0.12 }
+    )
+    sectionRef.current?.querySelectorAll('.reveal')
+      .forEach(el => observer.observe(el))
+    return () => observer.disconnect()
+  }, [])
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (email) { setSubmitted(true); setEmail('') }
+  }
 
   return (
-    <section style={{ padding: '128px 0', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', inset: 0, zIndex: -1, background: 'linear-gradient(to bottom, transparent, rgba(79,36,162,0.12), transparent)' }} />
-      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 1000, height: 500, background: 'radial-gradient(ellipse, rgba(124,58,237,0.1) 0%, transparent 70%)', zIndex: -1 }} />
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px' }}>
-        <div ref={ref}
-          style={{
-            position: 'relative', borderRadius: 40, padding: 'clamp(48px, 8vw, 80px)',
-            background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(40px)',
-            border: '1px solid rgba(255,255,255,0.08)', textAlign: 'center',
-            overflow: 'hidden',
-            opacity: visible ? 1 : 0,
-            transform: visible ? 'scale(1)' : 'scale(0.92)',
-            transition: 'opacity 0.7s ease, transform 0.7s ease',
-          }}
-        >
-          {/* Inner gradient */}
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(124,58,237,0.08) 0%, transparent 50%, rgba(59,130,246,0.08) 100%)', borderRadius: 40 }} />
-          {/* Corner decorations */}
-          <div style={{ position: 'absolute', top: 32, left: 32, width: 80, height: 80, borderRadius: '50%', border: '1px solid rgba(124,58,237,0.2)' }} />
-          <div style={{ position: 'absolute', bottom: 32, right: 32, width: 56, height: 56, borderRadius: '50%', border: '1px solid rgba(59,130,246,0.2)' }} />
+    <section ref={sectionRef} className="relative bg-[#0f0f0f] py-32 px-6 overflow-hidden">
+      {/* Background grain texture suggestion via pseudo element */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.02]" />
+        {/* Corner accents */}
+        <div className="absolute top-0 left-0 w-64 h-64 border-l border-t border-white/[0.04] rounded-br-full" />
+        <div className="absolute bottom-0 right-0 w-64 h-64 border-r border-b border-white/[0.04] rounded-tl-full" />
+      </div>
 
-          <div style={{ position: 'relative', zIndex: 1 }}>
-            <div className="glass" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 16px', borderRadius: 99, border: '1px solid rgba(124,58,237,0.2)', marginBottom: 32 }}>
-              <span>✨</span>
-              <span style={{ fontSize: 14, color: '#c4b5fd', fontWeight: 500 }}>Join 50,000+ developers</span>
-            </div>
+      <div className="relative max-w-3xl mx-auto text-center">
+        <p className="reveal text-white/40 text-xs tracking-[0.4em] uppercase mb-4">— Exclusive Access</p>
+        <h2 className="reveal d1 font-poppins font-black text-5xl md:text-6xl lg:text-7xl text-white leading-none mb-6">
+          Join the<br />
+          <span className="text-white/30">Movement.</span>
+        </h2>
+        <p className="reveal d2 text-white/50 text-base md:text-lg leading-relaxed max-w-xl mx-auto mb-12">
+          Be the first to know about new drops, limited editions, and exclusive member discounts. No spam, just style.
+        </p>
 
-            <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(36px, 5vw, 60px)', fontWeight: 900, letterSpacing: '-1.5px', marginBottom: 24, lineHeight: 1.1 }}>
-              Ready to ship at<br /><span className="gradient-text">the speed of thought?</span>
-            </h2>
-
-            <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.45)', marginBottom: 40, maxWidth: 480, margin: '0 auto 40px' }}>
-              Start for free. No credit card required. Deploy your first project in under 60 seconds.
+        {/* Form */}
+        {!submitted ? (
+          <form
+            onSubmit={handleSubmit}
+            className="reveal d3 flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+          >
+            <input
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="your@email.com"
+              required
+              className="cta-input flex-1 bg-white/[0.06] border border-white/10 text-white placeholder-white/30 px-5 py-4 rounded-full text-sm tracking-wide transition-colors"
+            />
+            <button
+              type="submit"
+              className="btn-primary px-7 py-4 rounded-full text-sm font-semibold tracking-widest uppercase whitespace-nowrap"
+            >
+              Subscribe
+            </button>
+          </form>
+        ) : (
+          <div className="reveal d3 glass-card rounded-2xl px-8 py-5 inline-block">
+            <p className="text-white text-sm font-medium tracking-wide">
+              ✓ &nbsp; You're in. Welcome to Devnix Studio.
             </p>
-
-            <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <a href="#" className="btn-glow" style={{
-                display: 'inline-flex', alignItems: 'center', gap: 8,
-                padding: '16px 40px', borderRadius: 16,
-                background: 'linear-gradient(135deg, #7c3aed, #3b82f6)',
-                color: '#fff', fontWeight: 600, fontSize: 16, textDecoration: 'none',
-                boxShadow: '0 20px 60px rgba(124,58,237,0.3)', transition: 'all 0.3s',
-              }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px) scale(1.03)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = 'none'; }}>
-                Get Started Free →
-              </a>
-              <a href="#" style={{
-                display: 'inline-flex', alignItems: 'center', gap: 8,
-                padding: '16px 40px', borderRadius: 16,
-                background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
-                color: '#fff', fontWeight: 500, fontSize: 16, textDecoration: 'none', transition: 'all 0.3s',
-              }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.transform = 'none'; }}>
-                Talk to Sales
-              </a>
-            </div>
           </div>
+        )}
+
+        <p className="reveal d4 text-white/25 text-xs mt-5 tracking-wide">
+          Unsubscribe any time. We hate spam too.
+        </p>
+
+        {/* Social proof */}
+        <div className="reveal d5 mt-14 flex flex-wrap justify-center gap-8">
+          {['50K+ Members', '200+ Drops', 'Free Shipping on $150+'].map(s => (
+            <div key={s} className="flex items-center gap-2">
+              <div className="w-1 h-1 rounded-full bg-white/30" />
+              <span className="text-white/40 text-xs tracking-widest uppercase">{s}</span>
+            </div>
+          ))}
         </div>
       </div>
     </section>
-  );
+  )
 }

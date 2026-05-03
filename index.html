@@ -4,10 +4,8 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Nexus — The modern deployment platform. Build faster, ship smarter, scale infinitely." />
-    <meta name="theme-color" content="#080808" />
-    <title>Nexus — Build Faster. Ship Smarter. Scale Infinitely.</title>
-    <!-- Tailwind CSS CDN (v3) -->
+    <meta name="description" content="Devnix Studio — Premium minimal clothing for the bold generation. Redefine your style." />
+    <title>Devnix Studio — Redefine Your Style</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -15,61 +13,77 @@
           extend: {
             fontFamily: {
               sans: ['Inter', 'sans-serif'],
-              outfit: ['Outfit', 'sans-serif'],
-            },
-            colors: {
-              violet: {
-                400: '#a78bfa',
-                500: '#8b5cf6',
-                600: '#7c3aed',
-                900: '#2e1065',
-              },
+              poppins: ['Poppins', 'sans-serif'],
             },
           },
         },
       }
     </script>
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <style>
-      * { box-sizing: border-box; margin: 0; padding: 0; }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       html { scroll-behavior: smooth; }
-      body { font-family: 'Inter', sans-serif; background-color: #080808; color: #fff; overflow-x: hidden; }
-      ::-webkit-scrollbar { width: 6px; }
+      body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #fff; overflow-x: hidden; }
+      ::-webkit-scrollbar { width: 4px; }
       ::-webkit-scrollbar-track { background: #0a0a0a; }
-      ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-      ::-webkit-scrollbar-thumb:hover { background: #555; }
-      .gradient-text {
-        background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+      ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
+
+      .glass { background: rgba(255,255,255,0.04); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.07); }
+      .glass-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.06); }
+
+      /* Scroll reveal */
+      .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+      .reveal.visible { opacity: 1; transform: translateY(0); }
+      .reveal-l { opacity: 0; transform: translateX(-40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+      .reveal-l.visible { opacity: 1; transform: translateX(0); }
+      .reveal-r { opacity: 0; transform: translateX(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+      .reveal-r.visible { opacity: 1; transform: translateX(0); }
+      .d1 { transition-delay: 0.1s; } .d2 { transition-delay: 0.2s; }
+      .d3 { transition-delay: 0.3s; } .d4 { transition-delay: 0.4s; } .d5 { transition-delay: 0.5s; }
+
+      /* Marquee */
+      .marquee-track { display: flex; width: max-content; animation: marquee 30s linear infinite; }
+      @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+      /* Navbar */
+      #navbar { transition: background 0.4s ease, box-shadow 0.4s ease; }
+      #navbar.scrolled { background: rgba(10,10,10,0.95) !important; backdrop-filter: blur(24px); box-shadow: 0 1px 0 rgba(255,255,255,0.06); }
+
+      /* Buttons */
+      .btn-primary { background: #fff; color: #0a0a0a; transition: all 0.3s ease; }
+      .btn-primary:hover { background: #e0e0e0; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,255,255,0.12); }
+      .btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.25); transition: all 0.3s ease; }
+      .btn-outline:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.55); transform: translateY(-2px); }
+
+      /* Product / Collection hover */
+      .card-img { transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+      .group:hover .card-img { transform: scale(1.08); }
+      .card-overlay { opacity: 0; transition: opacity 0.4s ease; }
+      .group:hover .card-overlay { opacity: 1; }
+
+      /* Hero text */
+      .hero-text {
+        background: linear-gradient(160deg, #ffffff 40%, #888888 100%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       }
-      .gradient-text-warm {
-        background: linear-gradient(135deg, #f472b6, #a78bfa, #60a5fa);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+
+      /* Stat number */
+      .stat-num {
+        font-family: 'Poppins', sans-serif; font-weight: 800;
+        background: linear-gradient(135deg, #fff, #888);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       }
-      .glass {
-        background: rgba(255,255,255,0.03);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.07);
-      }
-      .glass-strong {
-        background: rgba(255,255,255,0.05);
-        backdrop-filter: blur(40px);
-        -webkit-backdrop-filter: blur(40px);
-        border: 1px solid rgba(255,255,255,0.10);
-      }
-      .btn-glow:hover {
-        box-shadow: 0 0 25px rgba(139,92,246,0.5), 0 0 50px rgba(139,92,246,0.2);
-      }
-      .text-muted { color: rgba(255,255,255,0.45); }
-      .text-subtle { color: rgba(255,255,255,0.65); }
+
+      /* Testimonial */
+      .tslider { display: flex; transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94); }
+
+      /* Input focus */
+      .cta-input:focus { outline: none; border-color: rgba(255,255,255,0.5); }
+
+      /* Mobile menu */
+      #mobile-menu { transition: transform 0.4s ease, opacity 0.4s ease; }
     </style>
   </head>
   <body>
